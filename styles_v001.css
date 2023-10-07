@@ -18,6 +18,7 @@
     animation: pulse 1.5s infinite;
     width: 70px;
     height: 70px;
+    display: flex;
 }
 #wfb-button img {
 	width:100%
@@ -55,7 +56,14 @@
     width: 270px;
     display: none; /* Por defecto el formulario estará oculto */
 }
-
+#wfb-button , #formulario_whatsapp-form-chat * {
+    outline: none;
+}
+.formulario_whatsapp-form-chat p {
+    font-size: 20px;
+    line-height: 1.3;
+    padding-bottom: 12px;
+}
 .formulario_whatsapp-form-chat.mostrado {
     display: block;
 }

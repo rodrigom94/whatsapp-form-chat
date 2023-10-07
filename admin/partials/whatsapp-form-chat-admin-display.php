@@ -1,16 +1,20 @@
 <?php
 
-/**
- * Provide a admin area view for the plugin
- *
- * This file is used to markup the admin-facing aspects of the plugin.
- *
- * @link       https://wppb.me
- * @since      1.0.0
- *
- * @package    Whatsapp_Form_Chat
- * @subpackage Whatsapp_Form_Chat/admin/partials
- */
+// Verifica si el usuario tiene los permisos adecuados
+if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+}
+
 ?>
 
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
+<div class="wrap">
+    <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+    <form method="post" action="options.php">
+        <?php
+            // Agrega campos de configuración aquí
+            settings_fields( 'whatsapp_form_chat_options_group' );
+            do_settings_sections( 'whatsapp_form_chat' );
+            submit_button();
+        ?>
+    </form>
+</div>

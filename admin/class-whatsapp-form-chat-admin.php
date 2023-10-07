@@ -51,7 +51,8 @@ class Whatsapp_Form_Chat_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
+		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'register_plugin_settings' ) );
 	}
 
 	/**
@@ -99,5 +100,104 @@ class Whatsapp_Form_Chat_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/whatsapp-form-chat-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
+    public function add_plugin_admin_menu() {
+        add_options_page(
+            'Configuración de Whatsapp Form Chat', // Título de la página
+            'Whatsapp Form Chat', // Título del menú
+            'manage_options', // Capacidad
+            $this->plugin_name, // Slug del menú
+            array( $this, 'display_plugin_admin_page' ) // Función de callback
+        );
+    }
 
+    public function display_plugin_admin_page() {
+        include_once( 'partials/' . $this->plugin_name . '-admin-display.php' );
+    }
+
+	public function register_plugin_settings() {
+		register_setting( 'whatsapp_form_chat_options_group', 'whatsapp_form_chat_option_name' );
+
+		// Opciones Configuración ----------------------------
+		add_settings_section(
+			'whatsapp_form_chat_options_section',
+			'Modificación de campos',
+			array( $this, 'whatsapp_form_chat_options_section_callback' ),
+			'whatsapp_form_chat'
+		);
+		
+		// Nombre de Empresa
+		add_settings_field(
+			'whatsapp_form_chat_option_name',
+			'Nombre de Empresa',
+			array( $this, 'whatsapp_form_chat_option_name_callback' ),
+			'whatsapp_form_chat',
+			'whatsapp_form_chat_options_section'
+		);
+
+		// Número de Teléfono
+		add_settings_field(
+			'whatsapp_form_chat_option_telefono_destino',
+			'Número de Whatsapp<br>(incluir prefijo país como 51)',
+			array( $this, 'whatsapp_form_chat_option_telefono_destino_callback' ),
+			'whatsapp_form_chat',
+			'whatsapp_form_chat_options_section'
+		);
+
+		// Opciones Form ----------------------------
+
+		// Texto en Campo Nombre
+		add_settings_field(
+			'whatsapp_form_chat_option_form_nombre',
+			'Texto en Nombre',
+			array( $this, 'whatsapp_form_chat_option_form_nombre_callback' ),
+			'whatsapp_form_chat',
+			'whatsapp_form_chat_options_section'
+		);
+		// Texto en Campo Celular
+		add_settings_field(
+			'whatsapp_form_chat_option_form_telefono',
+			'Texto en Celular',
+			array( $this, 'whatsapp_form_chat_option_form_telefono_callback' ),
+			'whatsapp_form_chat',
+			'whatsapp_form_chat_options_section'
+		);
+		// Texto en Campo Email
+		add_settings_field(
+			'whatsapp_form_chat_option_form_email',
+			'Texto en Email',
+			array( $this, 'whatsapp_form_chat_option_form_email_callback' ),
+			'whatsapp_form_chat',
+			'whatsapp_form_chat_options_section'
+		);
+
+	}
+
+	// Opciones Configuración
+	public function whatsapp_form_chat_options_section_callback() {
+		echo 'Actualice y guarde los siguientes campos del formulario flotante.';
+	}
+	
+	public function whatsapp_form_chat_option_name_callback() {
+		$option_value = get_option( 'whatsapp_form_chat_option_name' );
+		echo '<input type="text" name="whatsapp_form_chat_option_name" value="' . esc_attr( $option_value ) . '">';
+	}
+
+	public function whatsapp_form_chat_option_telefono_destino_callback() {
+		$option_value = get_option( 'whatsapp_form_chat_option_telefono_destino' );
+		echo '<input type="text" name="whatsapp_form_chat_option_telefono_destino" value="' . esc_attr( $option_value ) . '">';
+	}
+
+	// Opciones Form
+	public function whatsapp_form_chat_option_form_nombre_callback() {
+		$option_value = get_option( 'whatsapp_form_chat_option_form_nombre' );
+		echo '<input type="text" name="whatsapp_form_chat_option_form_nombre" placeholder="Nombre" value="' . esc_attr( $option_value ) . '">';
+	}
+	public function whatsapp_form_chat_option_form_telefono_callback() {
+		$option_value = get_option( 'whatsapp_form_chat_option_form_telefono' );
+		echo '<input type="text" name="whatsapp_form_chat_option_form_telefono" placeholder="Celular" value="' . esc_attr( $option_value ) . '">';
+	}
+	public function whatsapp_form_chat_option_form_email_callback() {
+		$option_value = get_option( 'whatsapp_form_chat_option_form_email' );
+		echo '<input type="text" name="whatsapp_form_chat_option_form_email" placeholder="Email" value="' . esc_attr( $option_value ) . '">';
+	}
 }
